@@ -232,6 +232,7 @@ def analyze_transcripts():
 	pattern = os.path.join(CLAUDE_DIR, "projects", "*", "*.jsonl")
 	tools = collections.Counter()
 	agents = collections.Counter()
+	skills = collections.Counter()
 	for fp in glob.glob(pattern):
 		try:
 			with open(fp, errors="replace") as f:
@@ -251,6 +252,8 @@ def analyze_transcripts():
 							tools[c.get("name", "?")] += 1
 							if c.get("name") in ("Task", "Agent"):
 								agents[(c.get("input") or {}).get("subagent_type", "general")] += 1
+							if c.get("name") == "Skill":
+								skills[(c.get("input") or {}).get("skill", "?")] += 1
 		except OSError:
 			continue
 	if not tools:
@@ -259,7 +262,24 @@ def analyze_transcripts():
 		"note": "from locally retained transcripts only; likely a subset of all-time usage",
 		"topTools": tools.most_common(12),
 		"topAgents": agents.most_common(8),
+		"topSkills": skills.most_common(8),
 	}
+
+
+def load_plugins():
+	if RANGED:
+		return None
+	path = os.path.join(CLAUDE_DIR, "plugins", "installed_plugins.json")
+	try:
+		with open(path) as f:
+			data = json.load(f)
+	except (OSError, json.JSONDecodeError):
+		return None
+	plugins = data.get("plugins") or {}
+	if not isinstance(plugins, dict) or not plugins:
+		return None
+	names = sorted({key.split("@")[0] for key in plugins})
+	return {"installed": len(names), "names": names}
 
 
 def main():
@@ -273,6 +293,7 @@ def main():
 		"statsCache": load_stats_cache(),
 		"history": analyze_history(),
 		"transcripts": analyze_transcripts(),
+		"plugins": load_plugins(),
 	}
 	if out["statsCache"] is None and out["history"] is None:
 		print(json.dumps({"error": f"No usage data found in {CLAUDE_DIR} "
