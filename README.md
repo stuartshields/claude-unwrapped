@@ -2,9 +2,11 @@
 
 Your Claude Code usage, Spotify-Wrapped style — a single scroll-snap HTML page narrated by Claude itself, starring the crab. Built entirely from the data already sitting in your `~/.claude` directory. Nothing leaves your machine.
 
+This works with **Claude Code (the CLI)** only — it's the one Claude that stores its usage data locally in `~/.claude`. Claude Desktop and claude.ai keep conversations in the cloud, so there's nothing on disk to unwrap.
+
 ## What you get
 
-Ten full-screen slides in the Anthropic palette: total tokens (with an animated count-up of a number that will alarm you), sessions, your top model on heavy rotation, top projects, a coding personality derived from your hour-of-day histogram, your longest streak, your most played slash command, a head-to-head fun fact ("please" vs "thanks"), and an outro that knows exactly what time you'll be back tomorrow.
+Eleven full-screen slides in the Anthropic palette: an opening headline stat picked to alarm you — usually your token total, counted up before your eyes — sessions, your top model on heavy rotation, top projects, a coding personality invented just for you from your hours, habits, and vocabulary, your longest streak, your most played slash command, the supporting cast you delegate to (subagents, skills, and the plugins you installed but never use), a head-to-head fun fact invented from your data (maybe "please" vs "thanks", maybe your two favourite words in a photo finish), and an outro that knows exactly what time you'll be back tomorrow.
 
 The copy is written fresh each time, in Claude's voice, from *your* numbers — not a fill-in-the-blanks mad lib.
 
@@ -89,4 +91,4 @@ Everything is local: the analyzer reads your `~/.claude` directory, the output i
 ## Requirements
 
 - `python3` on PATH (stdlib only)
-- Claude Code with plugin support
+- Claude Code (the CLI) with plugin support — Claude Desktop and claude.ai aren't supported; their data lives server-side, not in `~/.claude`
