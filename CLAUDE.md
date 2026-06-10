@@ -10,6 +10,7 @@ Claude Code plugin: `/unwrapped:generate` builds a Spotify-Wrapped-style HTML re
 
 ## Conventions
 - Visual language: Anthropic brand — ivory `#FAF9F5`/`#F0EEE6`, coral `#D97757`, ink `#141413`, serif display type. The crab mascot is the native 🦀 emoji (`.crab` elements, sized via `font-size`).
+- All template colors derive from the `:root` variables — seven palette colors plus four background roles (`--bg-page`/`--bg-deep`/`--bg-dark`/`--bg-accent`, which default to the palette and may hold gradients); tints use `color-mix`. No color literals outside `:root` — this keeps user-requested persona themes (SKILL.md "Style overrides") a single-block edit of the generated file. The template itself always ships the brand palette.
 - Slides are full-viewport scroll-snap `<section class="slide">` elements; reveals via IntersectionObserver adding `.in`; charts are CSS-only bars driven by `--w`/`--h` custom properties.
 - Template placeholder contract: `data-count` slots take raw integers; `HOUR_DATA`/`HOT_HOURS` are JSON arrays; bar slots take `.bar-row` markup (exact snippet in SKILL.md). If you change template slots, update SKILL.md in the same commit.
 - Test commands: `python3 skills/generate/scripts/test_analyze.py` (analyzer unit tests, stdlib unittest against a synthetic fixture dir), `python3 skills/generate/scripts/analyze.py ~/.claude | python3 -m json.tool > /dev/null` (analyzer smoke), HTML tag-balance + `node --check` on the extracted script (template).
