@@ -72,6 +72,16 @@ python3 skills/generate/scripts/analyze.py --since 2026-03-01 --until 2026-03-31
 python3 skills/generate/scripts/analyze.py --since 2026-06-01   # June 1 → today
 ```
 
+## Share it
+
+Want a link instead of a file? Ask for a shareable version:
+
+```
+/unwrapped:generate share
+```
+
+Alongside the HTML you'll get `claude-unwrapped.share.json` — just the slide stats and copy, as data. Upload it at the Claude Unwrapped share site (a Cloudflare Worker; guarded by Turnstile) and you'll get a private-by-obscurity link that works for 90 days. Only what's in the share file is published.
+
 ## Privacy
 
 Everything is local: the analyzer reads your `~/.claude` directory, the output is a static HTML file in your current directory, and no network requests are made by the script or the page.

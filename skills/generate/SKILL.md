@@ -66,7 +66,7 @@ Before writing anything, look at the data and pick out 3–5 genuinely surprisin
 
 Use `display` names for models and short basenames for projects. Format big values compactly (10.3B, 3,505).
 
-6. If a whole section's data is missing (e.g. no `statsCache` → no token totals), delete that `<section>` entirely rather than faking numbers. The deck degrades gracefully — JS derives slides and dots dynamically.
+6. If a whole section's data is missing (e.g. no `statsCache` → no token totals), delete that `<section>` entirely rather than faking numbers. The deck degrades gracefully — JS derives slides and dots dynamically. If you delete the persona section, still fill `HOUR_DATA` and `HOT_HOURS` — set both to `[]`.
 
 ## Voice guide — this is the part that matters
 
@@ -87,3 +87,34 @@ Never write generic filler ("What a year it's been!"). Every line must be earned
 2. Syntax-check the inline JS: extract the `<script>` body to a temp file and run `node --check` on it (skip silently if node is unavailable).
 3. Open it: `open claude-unwrapped.html` (macOS) or `xdg-open` (Linux).
 4. Tell the user their three best stats in one short paragraph — make them want to scroll.
+
+## Step 5 — Share file (only if asked)
+
+If the user asks for a shareable link / share file (e.g. "/unwrapped:generate share", "make it shareable"), also write `./claude-unwrapped.share.json` — the same slide content as the HTML, as data. The share site validates strictly; follow this schema exactly (v1):
+
+```json
+{
+	"version": 1,
+	"userName": "…",
+	"periodLabel": "…",
+	"coverSub": "…",
+	"tokens":     { "total": 0, "kicker": "…", "sub": "…", "footnote": "…" },
+	"sessions":   { "total": 0, "kicker": "…", "sub": "…", "footnote": "…" },
+	"model":      { "top": "…", "sub": "…", "bars": [ { "label": "…", "value": "…", "width": 100 } ] },
+	"projects":   { "headline": "…", "sub": "…", "footnote": "…", "bars": [] },
+	"persona":    { "name": "…", "sub": "…", "hourData": [], "hotHours": [] },
+	"streak":     { "days": 0, "sub": "…", "footnote": "…" },
+	"topCommand": { "command": "…", "count": 0, "headline": "…", "sub": "…", "footnote": "…" },
+	"funFact":    { "kicker": "…", "sub": "…", "footnote": "…", "leftNum": "…", "leftLabel": "…", "rightNum": "…", "rightLabel": "…" },
+	"outro":      { "headline": "…", "footnote": "…", "stats": [ { "num": "…", "label": "…" } ] }
+}
+```
+
+Rules:
+
+- String length caps: `userName` ≤60, `periodLabel` ≤100, kickers ≤120, headlines ≤200, subs ≤600, footnotes ≤400, bar `label` ≤60, bar `value` ≤24, `leftNum`/`rightNum` ≤16, `leftLabel`/`rightLabel` ≤80, stat `num` ≤16, stat `label` ≤40, `command` ≤80, persona `name` ≤80.
+- Counts (`total`, `count`, `days`) are raw integers, no commas. Bar `value` and stat `num` are display strings ("10.3B", "3,505"). `width` is an integer 1–100, widest bar = 100.
+- 1–5 bars per chart; `hourData` is exactly the 24-int `history.hourHistogram`; `hotHours` are ints 0–23; 0–4 outro stats.
+- Any slide you skipped in the HTML is `null` here — never invent data. No extra keys; the upload is rejected otherwise.
+- Bars are **data, not HTML** — the share site builds its own markup.
+- Tell the user to upload the file at the Claude Unwrapped share site to get their link, and that shares expire after 90 days.

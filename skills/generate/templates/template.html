@@ -441,22 +441,24 @@
 	const hourData = {{HOUR_DATA}};
 	// hours highlighted in coral — pick the ones that tell the persona story
 	const hotHours = {{HOT_HOURS}};
-	const peak = Math.max(...hourData, 1);
 	const histo = document.querySelector('.histo');
 	const labels = document.querySelector('.histo-labels');
-	hourData.forEach((v, h) => {
-		const col = document.createElement('div');
-		col.className = 'col' + (hotHours.includes(h) ? ' hot' : '');
-		const stick = document.createElement('div');
-		stick.className = 'stick';
-		stick.style.setProperty('--h', Math.max((v / peak) * 100, 2) + '%');
-		stick.style.transitionDelay = (h * 35) + 'ms';
-		col.appendChild(stick);
-		histo.appendChild(col);
-		const lab = document.createElement('span');
-		lab.textContent = h % 6 === 0 ? (h === 0 ? '12a' : h === 12 ? '12p' : h % 12 + (h < 12 ? 'a' : 'p')) : '';
-		labels.appendChild(lab);
-	});
+	if (histo && labels) {
+		const peak = Math.max(...hourData, 1);
+		hourData.forEach((v, h) => {
+			const col = document.createElement('div');
+			col.className = 'col' + (hotHours.includes(h) ? ' hot' : '');
+			const stick = document.createElement('div');
+			stick.className = 'stick';
+			stick.style.setProperty('--h', Math.max((v / peak) * 100, 2) + '%');
+			stick.style.transitionDelay = (h * 35) + 'ms';
+			col.appendChild(stick);
+			histo.appendChild(col);
+			const lab = document.createElement('span');
+			lab.textContent = h % 6 === 0 ? (h === 0 ? '12a' : h === 12 ? '12p' : h % 12 + (h < 12 ? 'a' : 'p')) : '';
+			labels.appendChild(lab);
+		});
+	}
 
 	// keyboard nav
 	document.addEventListener('keydown', e => {
