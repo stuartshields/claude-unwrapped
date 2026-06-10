@@ -19,6 +19,12 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/analyze.py" > /tmp/claude-unwrapped-stats.j
 
 If the user passed a config dir as an argument, pass it through: `analyze.py <dir>`. The script honors `CLAUDE_CONFIG_DIR` and falls back to `~/.claude`.
 
+If the user asked for a specific period ("this month", "Q1", "since March"), pass `--since YYYY-MM-DD` and/or `--until YYYY-MM-DD` (inclusive). The output's `range` field echoes what was applied (null = all-time). Ranged caveats to respect in the copy:
+
+- `statsCache` totals are rebuilt from per-day cache data; `totalOutputTokens`, per-model `outputTokens`, and `longestSession` become null (the cache only stores those as lifetime aggregates) — skip or reframe slides that need them.
+- If the range extends past `lastComputedDate`, the cache-derived numbers undercount; `history` numbers stay exact.
+- `transcripts` may be null for older ranges (local retention is short).
+
 Read the JSON. It has three sections, each possibly null:
 
 - `statsCache` — totals from stats-cache.json: sessions, messages, tool calls, per-model token counts, busiest day, longest session. **Note `lastComputedDate`** — these totals may lag behind today.
