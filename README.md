@@ -72,20 +72,6 @@ python3 skills/generate/scripts/analyze.py --since 2026-03-01 --until 2026-03-31
 python3 skills/generate/scripts/analyze.py --since 2026-06-01   # June 1 → today
 ```
 
-### In any style
-
-Ask for a persona and Claude rethemes the deck — colors, gradients and all — and rewrites the copy in that register. Same slides, same real numbers. Anything with a recognizable look and voice works: a TV show, a band, a person.
-
-```
-/unwrapped:generate in the style of Bob Ross                 # a person
-/unwrapped:generate in the style of Severance                # a TV show
-/unwrapped:generate in the style of Daft Punk                # a band
-/unwrapped:generate narrated by David Attenborough           # a documentary
-/unwrapped:generate this month's recap, film-noir edition    # a genre, scoped to a period
-```
-
-Claude stays the narrator (it does the impression), keeps text readable against the new palette, and may swap the 🦀 for something more on-theme. Periods, config dirs, and styles combine freely.
-
 ## Privacy
 
 Everything is local: the analyzer reads your `~/.claude` directory, the output is a static HTML file in your current directory, and no network requests are made by the script or the page.
