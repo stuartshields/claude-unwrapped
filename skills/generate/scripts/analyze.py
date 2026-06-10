@@ -6,6 +6,7 @@ Reads stats-cache.json (sessions, messages, tokens, models), history.jsonl
 Emits a single JSON object on stdout. Stdlib only. Every section is
 optional — missing files produce nulls, never a crash.
 """
+import argparse
 import collections
 import datetime
 import glob
@@ -14,10 +15,26 @@ import os
 import re
 import sys
 
-CLAUDE_DIR = os.path.expanduser(
-	sys.argv[1] if len(sys.argv) > 1
-	else os.environ.get("CLAUDE_CONFIG_DIR", "~/.claude")
-)
+
+def parse_args():
+	p = argparse.ArgumentParser(description=__doc__)
+	p.add_argument("claude_dir", nargs="?",
+		default=os.environ.get("CLAUDE_CONFIG_DIR", "~/.claude"))
+	p.add_argument("--since", type=datetime.date.fromisoformat,
+		metavar="YYYY-MM-DD", help="only count activity on or after this date")
+	p.add_argument("--until", type=datetime.date.fromisoformat,
+		metavar="YYYY-MM-DD", help="only count activity on or before this date")
+	return p.parse_args()
+
+
+ARGS = parse_args()
+CLAUDE_DIR = os.path.expanduser(ARGS.claude_dir)
+SINCE, UNTIL = ARGS.since, ARGS.until
+RANGED = SINCE is not None or UNTIL is not None
+
+
+def in_range(date):
+	return (SINCE is None or date >= SINCE) and (UNTIL is None or date <= UNTIL)
 
 STOPWORDS = set("""
 the a an to and of in is it for on with that this you i be as at if or my we
@@ -42,6 +59,18 @@ def model_display_name(model_id):
 	return f"{family} {version}"
 
 
+def parse_day(s):
+	try:
+		return datetime.date.fromisoformat(s or "")
+	except ValueError:
+		return None
+
+
+def day_in_range(entry):
+	day = parse_day(entry.get("date"))
+	return day is not None and in_range(day)
+
+
 def load_stats_cache():
 	path = os.path.join(CLAUDE_DIR, "stats-cache.json")
 	try:
@@ -51,30 +80,54 @@ def load_stats_cache():
 		return None
 
 	daily = d.get("dailyActivity") or []
+	if RANGED:
+		daily = [x for x in daily if day_in_range(x)]
 	busiest = max(daily, key=lambda x: x.get("messageCount", 0), default=None)
 
 	models = {}
 	total_tokens = 0
-	total_output = 0
-	for model_id, usage in (d.get("modelUsage") or {}).items():
-		tokens = sum(usage.get(k, 0) for k in (
-			"inputTokens", "outputTokens",
-			"cacheReadInputTokens", "cacheCreationInputTokens",
-		))
-		models[model_id] = {
-			"display": model_display_name(model_id),
-			"totalTokens": tokens,
-			"outputTokens": usage.get("outputTokens", 0),
-		}
-		total_tokens += tokens
-		total_output += usage.get("outputTokens", 0)
+	if RANGED:
+		# modelUsage and longestSession are lifetime aggregates the cache
+		# never breaks down by day; only dailyModelTokens (total tokens per
+		# model per date, no output split) can honor the range.
+		for day in (d.get("dailyModelTokens") or []):
+			if not day_in_range(day):
+				continue
+			for model_id, tokens in (day.get("tokensByModel") or {}).items():
+				m = models.setdefault(model_id, {
+					"display": model_display_name(model_id),
+					"totalTokens": 0,
+					"outputTokens": None,
+				})
+				m["totalTokens"] += tokens
+				total_tokens += tokens
+		total_output = None
+		total_sessions = sum(x.get("sessionCount", 0) for x in daily)
+		total_messages = sum(x.get("messageCount", 0) for x in daily)
+		longest = {}
+	else:
+		total_output = 0
+		for model_id, usage in (d.get("modelUsage") or {}).items():
+			tokens = sum(usage.get(k, 0) for k in (
+				"inputTokens", "outputTokens",
+				"cacheReadInputTokens", "cacheCreationInputTokens",
+			))
+			models[model_id] = {
+				"display": model_display_name(model_id),
+				"totalTokens": tokens,
+				"outputTokens": usage.get("outputTokens", 0),
+			}
+			total_tokens += tokens
+			total_output += usage.get("outputTokens", 0)
+		total_sessions = d.get("totalSessions")
+		total_messages = d.get("totalMessages")
+		longest = d.get("longestSession") or {}
 
-	longest = d.get("longestSession") or {}
 	return {
 		"lastComputedDate": d.get("lastComputedDate"),
 		"firstSessionDate": d.get("firstSessionDate"),
-		"totalSessions": d.get("totalSessions"),
-		"totalMessages": d.get("totalMessages"),
+		"totalSessions": total_sessions,
+		"totalMessages": total_messages,
 		"totalToolCalls": sum(x.get("toolCallCount", 0) for x in daily),
 		"busiestDay": busiest,
 		"totalTokens": total_tokens,
@@ -119,8 +172,10 @@ def analyze_history():
 			except json.JSONDecodeError:
 				continue
 			ts = e.get("timestamp")
-			if ts:
-				dt = datetime.datetime.fromtimestamp(ts / 1000)
+			dt = datetime.datetime.fromtimestamp(ts / 1000) if ts else None
+			if RANGED and (dt is None or not in_range(dt.date())):
+				continue
+			if dt:
 				hours[dt.hour] += 1
 				weekdays[dt.strftime("%A")] += 1
 				dates.add(dt.date())
@@ -165,6 +220,14 @@ def analyze_history():
 	}
 
 
+def iso_local_date(ts):
+	try:
+		dt = datetime.datetime.fromisoformat((ts or "").replace("Z", "+00:00"))
+	except ValueError:
+		return None
+	return dt.astimezone().date()
+
+
 def analyze_transcripts():
 	pattern = os.path.join(CLAUDE_DIR, "projects", "*", "*.jsonl")
 	tools = collections.Counter()
@@ -179,6 +242,10 @@ def analyze_transcripts():
 						e = json.loads(line)
 					except json.JSONDecodeError:
 						continue
+					if RANGED:
+						day = iso_local_date(e.get("timestamp"))
+						if day is None or not in_range(day):
+							continue
 					for c in ((e.get("message") or {}).get("content") or []):
 						if isinstance(c, dict) and c.get("type") == "tool_use":
 							tools[c.get("name", "?")] += 1
@@ -199,6 +266,10 @@ def main():
 	out = {
 		"generatedAt": datetime.datetime.now().isoformat(timespec="seconds"),
 		"claudeDir": CLAUDE_DIR,
+		"range": {
+			"since": SINCE.isoformat() if SINCE else None,
+			"until": UNTIL.isoformat() if UNTIL else None,
+		} if RANGED else None,
 		"statsCache": load_stats_cache(),
 		"history": analyze_history(),
 		"transcripts": analyze_transcripts(),
