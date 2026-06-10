@@ -49,6 +49,29 @@ Point it at a non-default config dir if you use one:
 /unwrapped:generate ~/.claude-work
 ```
 
+### A recap for any period
+
+All-time is the default. Ask for a period in plain language and Claude passes the matching dates to the analyzer:
+
+```
+/unwrapped:generate this month
+/unwrapped:generate Q1 2026
+/unwrapped:generate since March
+/unwrapped:generate ~/.claude-work for last week
+```
+
+Two things to know about ranged recaps:
+
+- A few stats only exist as lifetime totals (output tokens, longest session). Those slides are skipped or reframed instead of showing all-time numbers.
+- Tool-usage flavor comes from locally retained transcripts, which usually cover only the last few weeks. Older ranges get a recap without it.
+
+Want raw numbers instead of slides? Run the analyzer yourself — `--since` and `--until` take `YYYY-MM-DD`, are inclusive, and each works alone:
+
+```bash
+python3 skills/generate/scripts/analyze.py --since 2026-03-01 --until 2026-03-31
+python3 skills/generate/scripts/analyze.py --since 2026-06-01   # June 1 → today
+```
+
 ## Privacy
 
 Everything is local: the analyzer reads your `~/.claude` directory, the output is a static HTML file in your current directory, and no network requests are made by the script or the page.
