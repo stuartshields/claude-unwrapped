@@ -78,12 +78,21 @@ def build_fixture(root):
 	lines = [
 		transcript_line(JAN_DATE, "Bash"),
 		transcript_line(JAN_DATE, "Bash"),
+		transcript_line(JAN_DATE, "Skill", {"skill": "superpowers:brainstorming"}),
 		transcript_line(MAR_DATE, "Read"),
 		transcript_line(MAR_DATE, "Task", {"subagent_type": "code-reviewer"}),
+		transcript_line(MAR_DATE, "Skill", {"skill": "plan-cycle"}),
 	]
 	with open(os.path.join(proj, "t.jsonl"), "w") as f:
 		for line in lines:
 			f.write(json.dumps(line) + "\n")
+	plug = os.path.join(root, "plugins")
+	os.makedirs(plug)
+	with open(os.path.join(plug, "installed_plugins.json"), "w") as f:
+		json.dump({"version": 2, "plugins": {
+			"superpowers@obra": [{"scope": "user"}],
+			"frontend-design@claude-plugins-official": [{"scope": "project"}],
+		}}, f)
 
 
 def transcript_line(date, tool, tool_input=None):
@@ -143,8 +152,9 @@ class TestDateRange(unittest.TestCase):
 			self.tmp.name, "--since", "2026-03-01", "--until", "2026-03-31")
 		self.assertEqual(code, 0)
 		t = out["transcripts"]
-		self.assertEqual(dict(t["topTools"]), {"Read": 1, "Task": 1})
+		self.assertEqual(dict(t["topTools"]), {"Read": 1, "Task": 1, "Skill": 1})
 		self.assertEqual(dict(t["topAgents"]), {"code-reviewer": 1})
+		self.assertEqual(dict(t["topSkills"]), {"plan-cycle": 1})
 
 	def test_output_echoes_active_range(self):
 		code, out = run_analyze(
@@ -166,7 +176,26 @@ class TestDateRange(unittest.TestCase):
 		self.assertEqual(sc["longestSession"], {"messageCount": 500, "hours": 2.0})
 		self.assertEqual(
 			dict(out["transcripts"]["topTools"]),
-			{"Bash": 2, "Read": 1, "Task": 1})
+			{"Bash": 2, "Read": 1, "Task": 1, "Skill": 2})
+		self.assertEqual(
+			dict(out["transcripts"]["topSkills"]),
+			{"superpowers:brainstorming": 1, "plan-cycle": 1})
+		self.assertEqual(out["plugins"],
+			{"installed": 2, "names": ["frontend-design", "superpowers"]})
+
+	def test_plugins_null_when_ranged(self):
+		code, out = run_analyze(
+			self.tmp.name, "--since", "2026-03-01", "--until", "2026-03-31")
+		self.assertEqual(code, 0)
+		self.assertIsNone(out["plugins"])
+
+	def test_plugins_null_when_inventory_missing(self):
+		with tempfile.TemporaryDirectory() as root:
+			with open(os.path.join(root, "history.jsonl"), "w") as f:
+				f.write(json.dumps(history_entry(JAN_DATE, 9, "hi", "s1")) + "\n")
+			code, out = run_analyze(root)
+			self.assertEqual(code, 0)
+			self.assertIsNone(out["plugins"])
 
 
 if __name__ == "__main__":

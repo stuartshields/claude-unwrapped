@@ -5,7 +5,7 @@ Claude Code plugin: `/unwrapped:generate` builds a Spotify-Wrapped-style HTML re
 ## Layout
 - `.claude-plugin/plugin.json` — plugin manifest (name: `unwrapped`); `marketplace.json` — single-plugin marketplace (`source: "./"`) so the repo installs directly.
 - `skills/generate/SKILL.md` — the skill: analyze → find the story → fill template → verify → open. The voice guide lives here; keep it.
-- `skills/generate/scripts/analyze.py` — stdlib-only aggregator. Reads `stats-cache.json`, `history.jsonl`, `projects/*/*.jsonl`. Honors `CLAUDE_CONFIG_DIR`, accepts a dir as argv[1] plus optional `--since`/`--until YYYY-MM-DD` (inclusive; ranged runs derive stats-cache totals from `dailyActivity`/`dailyModelTokens` and null the lifetime-only fields — output tokens, longest session). Emits one JSON to stdout with a `range` field echoing the filter. Every section nullable — never crash on missing files.
+- `skills/generate/scripts/analyze.py` — stdlib-only aggregator. Reads `stats-cache.json`, `history.jsonl`, `projects/*/*.jsonl`, `plugins/installed_plugins.json`. Honors `CLAUDE_CONFIG_DIR`, accepts a dir as argv[1] plus optional `--since`/`--until YYYY-MM-DD` (inclusive; ranged runs derive stats-cache totals from `dailyActivity`/`dailyModelTokens` and null the lifetime-only fields — output tokens, longest session, the `plugins` section). Emits one JSON to stdout with a `range` field echoing the filter. Every section nullable — never crash on missing files.
 - `skills/generate/templates/template.html` — single-file deck with `{{PLACEHOLDER}}` slots. No build, no dependencies, vanilla CSS + JS only — keep it that way. The voice reference for generated copy is the voice guide in SKILL.md.
 
 ## Conventions
