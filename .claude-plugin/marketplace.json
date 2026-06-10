@@ -1,0 +1,13 @@
+{
+	"name": "ai-code-unwrapped",
+	"owner": {
+		"name": "Stuart Shields"
+	},
+	"plugins": [
+		{
+			"name": "unwrapped",
+			"source": "./",
+			"description": "Spotify-Wrapped-style HTML recap of your Claude Code usage, generated locally and narrated by Claude itself."
+		}
+	]
+}
