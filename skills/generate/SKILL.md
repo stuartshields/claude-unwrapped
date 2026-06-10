@@ -101,8 +101,8 @@ If the user asks for a shareable link / share file (e.g. "/unwrapped:generate sh
 	"tokens":     { "total": 0, "kicker": "…", "sub": "…", "footnote": "…" },
 	"sessions":   { "total": 0, "kicker": "…", "sub": "…", "footnote": "…" },
 	"model":      { "top": "…", "sub": "…", "bars": [ { "label": "…", "value": "…", "width": 100 } ] },
-	"projects":   { "headline": "…", "sub": "…", "footnote": "…", "bars": [] },
-	"persona":    { "name": "…", "sub": "…", "hourData": [], "hotHours": [] },
+	"projects":   { "headline": "…", "sub": "…", "footnote": "…", "bars": [ { "label": "…", "value": "…", "width": 100 } ] },
+	"persona":    { "name": "…", "sub": "…", "hourData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "hotHours": [22, 23] },
 	"streak":     { "days": 0, "sub": "…", "footnote": "…" },
 	"topCommand": { "command": "…", "count": 0, "headline": "…", "sub": "…", "footnote": "…" },
 	"funFact":    { "kicker": "…", "sub": "…", "footnote": "…", "leftNum": "…", "leftLabel": "…", "rightNum": "…", "rightLabel": "…" },
@@ -114,7 +114,7 @@ Rules:
 
 - String length caps: `userName` ≤60, `periodLabel` ≤100, kickers ≤120, headlines ≤200, subs ≤600, footnotes ≤400, bar `label` ≤60, bar `value` ≤24, `leftNum`/`rightNum` ≤16, `leftLabel`/`rightLabel` ≤80, stat `num` ≤16, stat `label` ≤40, `command` ≤80, persona `name` ≤80.
 - Counts (`total`, `count`, `days`) are raw integers, no commas. Bar `value` and stat `num` are display strings ("10.3B", "3,505"). `width` is an integer 1–100, widest bar = 100.
-- 1–5 bars per chart; `hourData` is exactly the 24-int `history.hourHistogram`; `hotHours` are ints 0–23; 0–4 outro stats.
+- 1–5 bars per chart; `hourData` is exactly the 24-int `history.hourHistogram`; `hotHours` are ints 0–23; 1–4 outro stats.
 - Any slide you skipped in the HTML is `null` here — never invent data. No extra keys; the upload is rejected otherwise.
 - Bars are **data, not HTML** — the share site builds its own markup.
 - Tell the user to upload the file at the Claude Unwrapped share site to get their link, and that shares expire after 90 days.
