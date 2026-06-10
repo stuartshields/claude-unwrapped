@@ -40,7 +40,7 @@ If the script exits non-zero with an error JSON, tell the user what was missing 
 
 Before writing anything, look at the data and pick out 3–5 genuinely surprising or funny facts. Examples of what to hunt for:
 
-- The **headline number** (this drives the opening stat slide): the single most absurd number in this user's data, counted up from zero. Default to total tokens — it usually wins — but a genuinely more alarming stat (a 96-hour longest session, a four-digit `/clear` count) takes the slot instead. Anchor it with a comparison invented for this user — pick the yardstick from their own world (their top project's domain, their top words, their habits), never from a stock list and never one that appears anywhere in this file. If the stat you pick also powers a later slide, reframe that slide around a different angle or delete it — the deck never plays the same number twice.
+- The **headline number** (this drives the opening stat slide): the single most absurd number in this user's data, counted up from zero. Default to total tokens — it usually wins — but a genuinely more alarming stat (a 96-hour longest session, a four-digit `/clear` count) takes the slot instead. Anchor it with a comparison whose yardstick is **named from their data**: the sentence must contain their top project's name or one of their top words, with the arithmetic done against it. A comparison built on general knowledge — encyclopedias, famous novels, distances to space — fails this rule even when the math is right, because it would work in anyone's deck. If the stat you pick also powers a later slide, reframe that slide around a different angle or delete it — the deck never plays the same number twice.
 - The **persona** (this drives the coral slide): invent one unique to this user — never pick from a stock list, and never reuse a name you'd give anyone else. Build it as a procedure: take their sharpest time-of-day trait from the hour histogram, fuse it with their sharpest behavioral trait from a second signal (top words, top projects, slash-command habits, `avgPromptChars`, streaks, please/thanks), and compress the pair into a "The ..." title. Rules:
   - Every trait in the name must be provable by a number on the slide or in its sub-copy.
   - The slide's chart shows hours, so the persona needs an hour-of-day angle; set `HOT_HOURS` to the hours that prove it. Non-hourly traits (weekend habits, politeness, prompt length) live in the second half of the name or the sub-copy.
@@ -86,7 +86,10 @@ Never write generic filler ("What a year it's been!"). Every line must be earned
 ## Step 4 — Verify and open
 
 1. Confirm no `{{` remains: `grep -c '{{' claude-unwrapped.html` must output 0.
-2. Uniqueness check: re-read every line of copy you wrote. Any comparison built on general trivia instead of this user's data, and any sentence that would work in someone else's deck, gets rewritten. Mechanical net for the worst offenders: `grep -ciE 'wikipedia|encyclopedia|war and peace' claude-unwrapped.html` must output 0.
+2. Yardstick gate — **blocking, loop until it passes**:
+	- Run `grep -icE 'wikipedia|encyclopedia|war and peace|library of congress|to the moon' claude-unwrapped.html`. Non-zero output = edit the offending line and run the grep again. Repeat until it outputs 0.
+	- Then re-read each comparison you wrote and confirm it names this user's data (a project, a word, a habit). Rewrite any that don't.
+	- The `open` step below is forbidden until both checks pass. There is no exception.
 3. Syntax-check the inline JS: extract the `<script>` body to a temp file and run `node --check` on it (skip silently if node is unavailable).
 4. Open it: `open claude-unwrapped.html` (macOS) or `xdg-open` (Linux).
 5. Tell the user their three best stats in one short paragraph — make them want to scroll.
