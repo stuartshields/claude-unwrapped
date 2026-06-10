@@ -1,4 +1,4 @@
-# ai-code-unwrapped
+# claude-unwrapped
 
 Claude Code plugin: `/unwrapped:generate` builds a Spotify-Wrapped-style HTML recap of the user's Claude Code usage from their local `~/.claude` data, narrated in Claude's first-person voice.
 

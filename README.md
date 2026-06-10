@@ -17,7 +17,7 @@ The copy is written fresh each time, in Claude's voice, from *your* numbers — 
 ```bash
 git clone <repo-url> ~/.claude/skills/unwrapped
 # or, from a clone elsewhere:
-ln -s /path/to/ai-code-unwrapped ~/.claude/skills/unwrapped
+ln -s /path/to/claude-unwrapped ~/.claude/skills/unwrapped
 ```
 
 Run it with `/unwrapped:generate`.
@@ -25,14 +25,14 @@ Run it with `/unwrapped:generate`.
 **Option 2 — session flag (try it once).** Point Claude Code at the clone for a single session:
 
 ```bash
-claude --plugin-dir /path/to/ai-code-unwrapped
+claude --plugin-dir /path/to/claude-unwrapped
 ```
 
 **Option 3 — marketplace (classic).** The repo doubles as its own single-plugin marketplace:
 
 ```
-/plugin marketplace add /path/to/ai-code-unwrapped   # or <owner>/ai-code-unwrapped from GitHub
-/plugin install unwrapped@ai-code-unwrapped
+/plugin marketplace add /path/to/claude-unwrapped   # or <owner>/claude-unwrapped from GitHub
+/plugin install unwrapped@claude-unwrapped
 ```
 
 ## Run
