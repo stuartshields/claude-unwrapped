@@ -11,7 +11,7 @@ You are about to make the user a personalized, slightly cheeky recap of their li
 
 ## Step 1 — Analyze
 
-Run the bundled analyzer (stdlib Python, no dependencies):
+Run the bundled analyzer (stdlib Python, no dependencies). **Run it fresh on every invocation** — never reuse a stats file from a previous run or numbers from earlier in the conversation; a recap with no period mentioned is always all-time, even if the last one was ranged.
 
 ```bash
 python3 "${CLAUDE_SKILL_DIR}/scripts/analyze.py" > /tmp/claude-unwrapped-stats.json
@@ -25,7 +25,9 @@ If the user asked for a specific period ("this month", "Q1", "since March"), pas
 - If the range extends past `lastComputedDate`, the cache-derived numbers undercount; `history` numbers stay exact.
 - `transcripts` may be null for older ranges (local retention is short).
 
-Read the JSON. It has three sections, each possibly null:
+Read the JSON. First check its `range` field matches this request — `null` for all-time, the requested dates otherwise. A mismatch means the stats are stale: re-run the analyzer before continuing.
+
+It has three sections, each possibly null:
 
 - `statsCache` — totals from stats-cache.json: sessions, messages, tool calls, per-model token counts, busiest day, longest session. **Note `lastComputedDate`** — these totals may lag behind today.
 - `history` — from history.jsonl: prompt count, hour histogram, weekday split, streaks, active days, top projects, top slash commands, top words, please/thanks counts.
