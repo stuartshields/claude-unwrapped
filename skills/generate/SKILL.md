@@ -1,7 +1,7 @@
 ---
 name: generate
-description: Generate "Claude Unwrapped" — a Spotify-Wrapped-style HTML recap of the user's Claude Code usage, built from their local ~/.claude data and written in Claude's own voice. Use when the user asks for their Claude usage recap, wrapped, unwrapped, or year-in-review.
-argument-hint: "[optional: path to a Claude config dir, defaults to ~/.claude]"
+description: Generate "Claude Unwrapped" — a Spotify-Wrapped-style HTML recap of the user's Claude Code usage, built from their local ~/.claude data and written in Claude's own voice. Use when the user asks for their Claude usage recap, wrapped, unwrapped, or year-in-review — including period-scoped ("this month", "Q1") or persona-styled ("in the style of ...") versions.
+argument-hint: "[optional: config dir, a period ('this month', 'Q1'), and/or a style ('in the style of Bob Ross')]"
 allowed-tools: Bash, Read, Write, Edit
 ---
 
@@ -78,6 +78,24 @@ Write all copy in **Claude's first person**, addressing the user by name. The re
 - The outro asks a question that proves you noticed their habits: "Same time tomorrow? 5 AM, right?"
 
 Never write generic filler ("What a year it's been!"). Every line must be earned by a specific number from this user's data.
+
+## Style overrides
+
+If the user asked for a persona or style ("in the style of Bob Ross", "film-noir edition"), restyle the palette and the copy. Data, slide structure, and verification don't change. No style requested → skip this section entirely; the Anthropic palette is the default.
+
+**Palette.** Every color in the deck derives from the `:root` block — seven palette variables, four background variables defaulting to them, two font stacks; tints use `color-mix`. Retheming is editing that one block in the generated `claude-unwrapped.html` (never the template). Map the persona onto the existing roles and preserve the luminance relationships, or slides become unreadable:
+
+- `--ivory`/`--ivory-deep` stay light (page text-on-dark + light surfaces); `--ink`/`--ink-soft` stay dark; `--muted` sits between.
+- `--coral`/`--coral-deep` are the accent — it must carry `--ivory`-role text at ≥4.5:1, because the accent slide sets its copy in the ivory role on the accent background.
+- Swap font stacks only if the persona demands it, using system/web-safe fonts only — the page makes no network requests and must stay that way.
+
+**Backgrounds.** `--bg-page`, `--bg-deep`, `--bg-dark`, `--bg-accent` control the page and the three slide treatments. They default to the palette variables, so a palette-only theme is enough — but a persona that wants more can set any of them to a CSS gradient (e.g. `--bg-accent: linear-gradient(135deg, #7B2D8E, #D4AF37)`). Rules:
+
+- CSS-only values — gradients and colors, never `url(...)` or anything that fetches.
+- Keep each background inside its role's luminance band across the **whole** gradient: `--bg-page`/`--bg-deep` light enough for `--ink` text, `--bg-dark`/`--bg-accent` dark enough for `--ivory`-role text at ≥4.5:1 at every stop.
+- Which slides get which treatment is fixed in the HTML — don't reassign slide classes.
+
+**Copy.** Claude remains the narrator, doing an impression: persona vocabulary and rhythm layered onto the voice guide, never replacing the first person or the every-line-earned-by-a-real-number rule. The 🦀 in `.crab` elements may become a persona-appropriate emoji, and the Step 2 hour-persona name gets persona flavor too.
 
 ## Step 4 — Verify and open
 

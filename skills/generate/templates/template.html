@@ -13,6 +13,10 @@
 		--ink: #141413;
 		--ink-soft: #3D3D3A;
 		--muted: #6E6B63;
+		--bg-page: var(--ivory);
+		--bg-deep: var(--ivory-deep);
+		--bg-dark: var(--ink);
+		--bg-accent: var(--coral);
 		--serif: "Tiempos Text", Georgia, "Times New Roman", serif;
 		--sans: "Styrene B", ui-sans-serif, -apple-system, "Helvetica Neue", Arial, sans-serif;
 	}
@@ -20,7 +24,7 @@
 	html { scroll-behavior: smooth; }
 	body {
 		font-family: var(--sans);
-		background: var(--ivory);
+		background: var(--bg-page);
 		color: var(--ink);
 	}
 	#deck {
@@ -43,9 +47,9 @@
 		position: relative;
 		overflow: hidden;
 	}
-	.slide.dark { background: var(--ink); color: var(--ivory); }
-	.slide.coral { background: var(--coral); color: var(--ivory); }
-	.slide.deep { background: var(--ivory-deep); }
+	.slide.dark { background: var(--bg-dark); color: var(--ivory); }
+	.slide.coral { background: var(--bg-accent); color: var(--ivory); }
+	.slide.deep { background: var(--bg-deep); }
 
 	.kicker {
 		font-size: 13px;
@@ -78,8 +82,8 @@
 		line-height: 1.55;
 		margin-top: 22px;
 	}
-	.dark .sub { color: #A8A49A; }
-	.coral .sub { color: #FBEAE2; }
+	.dark .sub { color: color-mix(in srgb, var(--ivory) 62%, var(--ink)); }
+	.coral .sub { color: color-mix(in srgb, var(--ivory) 88%, var(--coral)); }
 	.footnote {
 		position: absolute;
 		bottom: 56px;
@@ -89,8 +93,8 @@
 		max-width: 60ch;
 		padding: 0 24px;
 	}
-	.dark .footnote { color: #8A867C; }
-	.coral .footnote { color: #F3D5C8; }
+	.dark .footnote { color: color-mix(in srgb, var(--ivory) 49%, var(--ink)); }
+	.coral .footnote { color: color-mix(in srgb, var(--ivory) 72%, var(--coral)); }
 
 	/* reveal animation */
 	.rv {
@@ -133,8 +137,8 @@
 	}
 	.bar-row .label { text-align: right; color: inherit; opacity: 0.85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 	.bar-row .val { font-variant-numeric: tabular-nums; opacity: 0.7; }
-	.bar-track { background: rgba(20, 20, 19, 0.08); border-radius: 99px; height: 18px; overflow: hidden; }
-	.dark .bar-track, .coral .bar-track { background: rgba(250, 249, 245, 0.14); }
+	.bar-track { background: color-mix(in srgb, var(--ink) 8%, transparent); border-radius: 99px; height: 18px; overflow: hidden; }
+	.dark .bar-track, .coral .bar-track { background: color-mix(in srgb, var(--ivory) 14%, transparent); }
 	.bar-fill {
 		height: 100%;
 		border-radius: 99px;
@@ -155,7 +159,7 @@
 	}
 	.histo .col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
 	.histo .stick {
-		background: rgba(250, 249, 245, 0.28);
+		background: color-mix(in srgb, var(--ivory) 28%, transparent);
 		border-radius: 4px 4px 0 0;
 		transform: scaleY(0);
 		transform-origin: bottom;
@@ -182,8 +186,8 @@
 		margin-top: 36px;
 	}
 	.statgrid .cell {
-		background: rgba(250, 249, 245, 0.07);
-		border: 1px solid rgba(250, 249, 245, 0.14);
+		background: color-mix(in srgb, var(--ivory) 7%, transparent);
+		border: 1px solid color-mix(in srgb, var(--ivory) 14%, transparent);
 		border-radius: 14px;
 		padding: 18px 16px;
 	}
@@ -217,13 +221,13 @@
 		display: inline-block;
 		font-family: ui-monospace, "SF Mono", Menlo, monospace;
 		font-size: clamp(20px, 3.4vw, 32px);
-		background: rgba(20, 20, 19, 0.06);
-		border: 1px solid rgba(20, 20, 19, 0.12);
+		background: color-mix(in srgb, var(--ink) 6%, transparent);
+		border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
 		padding: 10px 26px;
 		border-radius: 99px;
 		margin-top: 8px;
 	}
-	.dark .pill { background: rgba(250, 249, 245, 0.08); border-color: rgba(250, 249, 245, 0.18); }
+	.dark .pill { background: color-mix(in srgb, var(--ivory) 8%, transparent); border-color: color-mix(in srgb, var(--ivory) 18%, transparent); }
 
 	/* progress dots */
 	#dots {
@@ -241,13 +245,13 @@
 		height: 8px;
 		border-radius: 50%;
 		border: none;
-		background: rgba(20, 20, 19, 0.22);
+		background: color-mix(in srgb, var(--ink) 22%, transparent);
 		cursor: pointer;
 		padding: 0;
 		transition: all 0.25s;
 	}
 	#dots button.active { background: var(--coral); transform: scale(1.5); }
-	body.on-dark #dots button { background: rgba(250, 249, 245, 0.3); }
+	body.on-dark #dots button { background: color-mix(in srgb, var(--ivory) 30%, transparent); }
 	body.on-dark #dots button.active { background: var(--coral); }
 
 	.scroll-hint {
