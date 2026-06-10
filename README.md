@@ -4,7 +4,7 @@ Your Claude Code usage, Spotify-Wrapped style — a single scroll-snap HTML page
 
 ## What you get
 
-Ten full-screen slides in the Anthropic palette: total tokens (with an animated count-up of a number that will alarm you), sessions, your top model on heavy rotation, top projects, a coding personality invented just for you from your hours, habits, and vocabulary, your longest streak, your most played slash command, a head-to-head fun fact ("please" vs "thanks"), and an outro that knows exactly what time you'll be back tomorrow.
+Ten full-screen slides in the Anthropic palette: an opening headline stat picked to alarm you — usually your token total, counted up before your eyes — sessions, your top model on heavy rotation, top projects, a coding personality invented just for you from your hours, habits, and vocabulary, your longest streak, your most played slash command, a head-to-head fun fact ("please" vs "thanks"), and an outro that knows exactly what time you'll be back tomorrow.
 
 The copy is written fresh each time, in Claude's voice, from *your* numbers — not a fill-in-the-blanks mad lib.
 

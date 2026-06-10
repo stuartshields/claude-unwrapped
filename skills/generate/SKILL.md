@@ -39,7 +39,7 @@ If the script exits non-zero with an error JSON, tell the user what was missing 
 
 Before writing anything, look at the data and pick out 3–5 genuinely surprising or funny facts. Examples of what to hunt for:
 
-- An absurd big number (billions of tokens — compare to something concrete: Wikipedia, novels, War and Peace).
+- The **headline number** (this drives the opening stat slide): the single most absurd number in this user's data, counted up from zero. Default to total tokens — it usually wins — but a genuinely more alarming stat (a 96-hour longest session, a four-digit `/clear` count) takes the slot instead. Compare it to something concrete: Wikipedia, novels, War and Peace. If the stat you pick also powers a later slide, reframe that slide around a different angle or delete it — the deck never plays the same number twice.
 - The **persona** (this drives the coral slide): invent one unique to this user — never pick from a stock list, and never reuse a name you'd give anyone else. Triangulate the hour histogram with at least one more signal — top words, top projects, slash-command habits, `avgPromptChars`, streaks, please/thanks. "The 2 AM Refactorer", "The Polite Marathoner", "The Dawn-Patrol Debugger" are the register, not options. Rules:
   - Every trait in the name must be provable by a number on the slide or in its sub-copy.
   - The slide's chart shows hours, so the persona needs an hour-of-day angle; set `HOT_HOURS` to the hours that prove it. Non-hourly traits (weekend habits, politeness, prompt length) live in the second half of the name or the sub-copy.
@@ -54,7 +54,7 @@ Before writing anything, look at the data and pick out 3–5 genuinely surprisin
 1. Copy `${CLAUDE_SKILL_DIR}/templates/template.html` to `./claude-unwrapped.html` in the current directory.
 2. Replace **every** `{{PLACEHOLDER}}`. Search the file for `{{` when done — none may remain.
 3. Get `USER_NAME` from `git config user.name` (first name only) or `$USER`. PERIOD_LABEL is the data date range, e.g. "January 13 — June 3, 2026".
-4. Numeric slots used in `data-count` attributes (`TOTAL_TOKENS`, `TOTAL_SESSIONS`, `STREAK_DAYS`, `TOP_COMMAND_COUNT`) must be **raw integers**, no commas. `HOUR_DATA` is the 24-int JSON array from `history.hourHistogram`; `HOT_HOURS` is a JSON array of hour numbers.
+4. Numeric slots used in `data-count` attributes (`HEADLINE_NUMBER`, `TOTAL_SESSIONS`, `STREAK_DAYS`, `TOP_COMMAND_COUNT`) must be **raw integers**, no commas. `HEADLINE_UNIT` is the short line under the count-up naming what it counts — lowercase, ends with a period ("tokens, between us." / "times you wiped my memory."). `HOUR_DATA` is the 24-int JSON array from `history.hourHistogram`; `HOT_HOURS` is a JSON array of hour numbers.
 5. Bar chart slots (`MODEL_BARS`, `PROJECT_BARS`): emit up to 5 rows, widest = 100%, others proportional. Exact row markup (tab-indented three levels):
 
 ```html
