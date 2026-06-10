@@ -40,13 +40,10 @@ If the script exits non-zero with an error JSON, tell the user what was missing 
 Before writing anything, look at the data and pick out 3–5 genuinely surprising or funny facts. Examples of what to hunt for:
 
 - An absurd big number (billions of tokens — compare to something concrete: Wikipedia, novels, War and Peace).
-- The hour histogram shape → pick a **persona** (this drives the coral slide):
-  - heavy before 7 AM → "The Dawn Patrol"
-  - heavy after 10 PM → "The Night Shift"
-  - sharp lunchtime spike → "The Lunch Break Builder"
-  - flat all day → "The All-Day Companion"
-  - weekend-heavy → "The Weekend Warrior"
-  - Invent a better name if the data suggests one. Set `HOT_HOURS` to the hours that prove the story.
+- The **persona** (this drives the coral slide): invent one unique to this user — never pick from a stock list, and never reuse a name you'd give anyone else. Triangulate the hour histogram with at least one more signal — top words, top projects, slash-command habits, `avgPromptChars`, streaks, please/thanks. "The 2 AM Refactorer", "The Polite Marathoner", "The Dawn-Patrol Debugger" are the register, not options. Rules:
+  - Every trait in the name must be provable by a number on the slide or in its sub-copy.
+  - The slide's chart shows hours, so the persona needs an hour-of-day angle; set `HOT_HOURS` to the hours that prove it. Non-hourly traits (weekend habits, politeness, prompt length) live in the second half of the name or the sub-copy.
+  - Keep it a display headline: 2–5 words, title case, "The ..." form.
 - A `/clear` habit (memory-wipe jokes), a dominant slash command, a workflow obsession.
 - Politeness: `saidPlease` vs `saidThanks` is the default head-to-head slide. If both are zero or boring, swap in another head-to-head (e.g. weekday vs weekend prompts, top word vs runner-up, sessions vs streak).
 - A longest session left open absurdly long; a streak; a single enormous day.
@@ -66,7 +63,7 @@ Before writing anything, look at the data and pick out 3–5 genuinely surprisin
 
 Use `display` names for models and short basenames for projects. Format big values compactly (10.3B, 3,505).
 
-6. If a whole section's data is missing (e.g. no `statsCache` → no token totals), delete that `<section>` entirely rather than faking numbers. The deck degrades gracefully — JS derives slides and dots dynamically.
+6. If a whole section's data is missing (e.g. no `statsCache` → no token totals), delete that `<section>` entirely rather than faking numbers. The deck degrades gracefully — JS derives slides and dots dynamically. If you delete the persona section, still fill `HOUR_DATA` and `HOT_HOURS` — set both to `[]`.
 
 ## Voice guide — this is the part that matters
 
