@@ -282,7 +282,25 @@ def load_plugins():
 	return {"installed": len(names), "names": names}
 
 
+def derive_comparisons(stats, history):
+	"""Ratios of the user's own numbers — yardstick-free raw material for copy."""
+	if not stats or not history:
+		return None
+	tokens = stats.get("totalTokens")
+	if not tokens:
+		return None
+	ratios = {
+		"tokensPerPrompt": history.get("promptCount"),
+		"tokensPerActiveDay": history.get("activeDays"),
+		"tokensPerSession": stats.get("totalSessions"),
+	}
+	return {key: round(tokens / denom) if denom else None
+		for key, denom in ratios.items()}
+
+
 def main():
+	stats = load_stats_cache()
+	history = analyze_history()
 	out = {
 		"generatedAt": datetime.datetime.now().isoformat(timespec="seconds"),
 		"claudeDir": CLAUDE_DIR,
@@ -290,10 +308,11 @@ def main():
 			"since": SINCE.isoformat() if SINCE else None,
 			"until": UNTIL.isoformat() if UNTIL else None,
 		} if RANGED else None,
-		"statsCache": load_stats_cache(),
-		"history": analyze_history(),
+		"statsCache": stats,
+		"history": history,
 		"transcripts": analyze_transcripts(),
 		"plugins": load_plugins(),
+		"derived": derive_comparisons(stats, history),
 	}
 	if out["statsCache"] is None and out["history"] is None:
 		print(json.dumps({"error": f"No usage data found in {CLAUDE_DIR} "
