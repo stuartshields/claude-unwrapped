@@ -27,12 +27,13 @@ If the user asked for a specific period ("this month", "Q1", "since March"), pas
 
 Read the JSON. First check its `range` field matches this request — `null` for all-time, the requested dates otherwise. A mismatch means the stats are stale: re-run the analyzer before continuing.
 
-It has four sections, each possibly null:
+It has five sections, each possibly null:
 
 - `statsCache` — totals from stats-cache.json: sessions, messages, tool calls, per-model token counts, busiest day, longest session. **Note `lastComputedDate`** — these totals may lag behind today.
 - `history` — from history.jsonl: prompt count, hour histogram, weekday split, streaks, active days, top projects, top slash commands, top words, please/thanks counts.
 - `transcripts` — top tools, top subagents, and top skills from locally retained transcripts (often a small subset; treat as flavor, not totals — copy built on these must be framed as recent-window, "lately", never lifetime).
 - `plugins` — installed plugin inventory: count and names (lifetime; null on ranged runs).
+- `derived` — precomputed ratios of this user's own numbers (tokens per prompt / per active day / per session). This is the only raw material for the headline comparison; the arithmetic is already done.
 
 If the script exits non-zero with an error JSON, tell the user what was missing and stop.
 
@@ -40,7 +41,7 @@ If the script exits non-zero with an error JSON, tell the user what was missing 
 
 Before writing anything, look at the data and pick out 3–5 genuinely surprising or funny facts. Examples of what to hunt for:
 
-- The **headline number** (this drives the opening stat slide): the single most absurd number in this user's data, counted up from zero. Default to total tokens — it usually wins — but a genuinely more alarming stat (a 96-hour longest session, a four-digit `/clear` count) takes the slot instead. Anchor it with a comparison invented for this user — pick the yardstick from their own world (their top project's domain, their top words, their habits), never from a stock list and never one that appears anywhere in this file. If the stat you pick also powers a later slide, reframe that slide around a different angle or delete it — the deck never plays the same number twice.
+- The **headline number** (this drives the opening stat slide): the single most absurd number in this user's data, counted up from zero. Default to total tokens — it usually wins — but a genuinely more alarming stat (a 96-hour longest session, a four-digit `/clear` count) takes the slot instead. Anchor it with a comparison built **only from `derived`**: the analyzer has already computed tokens per prompt, per active day, and per session — pick the most absurd ratio and express it against something named from their data (their top project, one of their top words). Both numbers in the sentence come from the JSON; you supply phrasing, never math and never a yardstick. A comparison built on general knowledge — encyclopedias, famous novels, distances to space — fails this rule even when accurate, because it would work in anyone's deck. If the stat you pick also powers a later slide, reframe that slide around a different angle or delete it — the deck never plays the same number twice.
 - The **persona** (this drives the coral slide): invent one unique to this user — never pick from a stock list, and never reuse a name you'd give anyone else. Build it as a procedure: take their sharpest time-of-day trait from the hour histogram, fuse it with their sharpest behavioral trait from a second signal (top words, top projects, slash-command habits, `avgPromptChars`, streaks, please/thanks), and compress the pair into a "The ..." title. Rules:
   - Every trait in the name must be provable by a number on the slide or in its sub-copy.
   - The slide's chart shows hours, so the persona needs an hour-of-day angle; set `HOT_HOURS` to the hours that prove it. Non-hourly traits (weekend habits, politeness, prompt length) live in the second half of the name or the sub-copy.
@@ -86,7 +87,10 @@ Never write generic filler ("What a year it's been!"). Every line must be earned
 ## Step 4 — Verify and open
 
 1. Confirm no `{{` remains: `grep -c '{{' claude-unwrapped.html` must output 0.
-2. Uniqueness check: re-read every line of copy you wrote. Any comparison built on general trivia instead of this user's data, and any sentence that would work in someone else's deck, gets rewritten. Mechanical net for the worst offenders: `grep -ciE 'wikipedia|encyclopedia|war and peace' claude-unwrapped.html` must output 0.
+2. Yardstick gate — **blocking, loop until it passes**:
+	- Run `grep -icE 'wikipedia|encyclopedia|war and peace|library of congress|to the moon' claude-unwrapped.html`. Non-zero output = edit the offending line and run the grep again. Repeat until it outputs 0.
+	- Then re-read each comparison you wrote and confirm it names this user's data (a project, a word, a habit). Rewrite any that don't.
+	- The `open` step below is forbidden until both checks pass. There is no exception.
 3. Syntax-check the inline JS: extract the `<script>` body to a temp file and run `node --check` on it (skip silently if node is unavailable).
 4. Open it: `open claude-unwrapped.html` (macOS) or `xdg-open` (Linux).
 5. Tell the user their three best stats in one short paragraph — make them want to scroll.

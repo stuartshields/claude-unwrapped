@@ -183,6 +183,33 @@ class TestDateRange(unittest.TestCase):
 		self.assertEqual(out["plugins"],
 			{"installed": 2, "names": ["frontend-design", "superpowers"]})
 
+	def test_derived_comparisons_all_time(self):
+		code, out = run_analyze(self.tmp.name)
+		self.assertEqual(code, 0)
+		self.assertEqual(out["derived"], {
+			"tokensPerPrompt": 20,
+			"tokensPerActiveDay": 50,
+			"tokensPerSession": 10,
+		})
+
+	def test_derived_comparisons_ranged(self):
+		code, out = run_analyze(
+			self.tmp.name, "--since", "2026-03-01", "--until", "2026-03-31")
+		self.assertEqual(code, 0)
+		self.assertEqual(out["derived"], {
+			"tokensPerPrompt": 833,
+			"tokensPerActiveDay": 2500,
+			"tokensPerSession": 625,
+		})
+
+	def test_derived_null_without_stats_cache(self):
+		with tempfile.TemporaryDirectory() as root:
+			with open(os.path.join(root, "history.jsonl"), "w") as f:
+				f.write(json.dumps(history_entry(JAN_DATE, 9, "hi", "s1")) + "\n")
+			code, out = run_analyze(root)
+			self.assertEqual(code, 0)
+			self.assertIsNone(out["derived"])
+
 	def test_plugins_null_when_ranged(self):
 		code, out = run_analyze(
 			self.tmp.name, "--since", "2026-03-01", "--until", "2026-03-31")
