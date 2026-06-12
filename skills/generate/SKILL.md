@@ -99,6 +99,16 @@ Never write generic filler ("What a year it's been!"). Every line must be earned
 
 If the user asks for a shareable link / share file (e.g. "/unwrapped:generate share", "make it shareable"), also write `./claude-unwrapped.share.json` — the same slide content as the HTML, as data. The share site validates strictly; follow this schema exactly (v1):
 
+**Privacy review — runs before the file is written.**
+
+1. Collect inline exclusions from the user's request first ("share without the projects slide", "share but hide coffee-app"). Both slides and individual items count.
+2. Show what would go public: the slides the share will contain, plus every name its strings and bars mention — project names, command names, model names, fun-fact labels. Ask what to hold back, with any inline exclusions listed as already applied. One short message; don't paste the full copy. If the user says there's nothing to hide (or gives no new exclusions), write the file.
+3. Apply exclusions:
+	- **Excluded slide** → that section is `null` in the JSON. Any slide can be excluded except the cover and the outro; if the user asks to drop those, explain they always ship and offer to reword their copy instead. Copy-only slides (tokens, sessions) have no items to hide — they are excluded whole or not at all.
+	- **Hidden item** → remove its bar row, re-normalise the remaining bars (widest = 100), and rewrite every share string that mentioned it — headline, sub, footnote, outro copy — around the remaining data. If it was the slide's subject (e.g. the top project), reframe around the new #1. A chart left with zero bars means the whole slide is dropped. A name that appears only in copy (never in a bar) has no row to remove — just rewrite the strings.
+4. Exclusions apply only to the share file. The local `claude-unwrapped.html` keeps everything.
+5. Leak check — blocking, like the yardstick gate: run one grep per hidden name with the name substituted in, e.g. hiding coffee-app means `grep -ic 'coffee-app' claude-unwrapped.share.json`. Non-zero output = rewrite the offending string and run the grep again; repeat until every hidden name outputs 0. Substring over-matches are fine — when in doubt, rewrite anyway.
+
 ```json
 {
 	"version": 1,
@@ -119,10 +129,11 @@ If the user asks for a shareable link / share file (e.g. "/unwrapped:generate sh
 
 Rules:
 
-- String length caps: `userName` ≤60, `periodLabel` ≤100, kickers ≤120, headlines ≤200, subs ≤600, footnotes ≤400, bar `label` ≤60, bar `value` ≤24, `leftNum`/`rightNum` ≤16, `leftLabel`/`rightLabel` ≤80, stat `num` ≤16, stat `label` ≤40, `command` ≤80, persona `name` ≤80.
+- String length caps: `userName` ≤60, `periodLabel` ≤100, kickers ≤120, headlines ≤120, subs ≤360, footnotes ≤220, bar `label` ≤60, bar `value` ≤16, `leftNum`/`rightNum` ≤16, `leftLabel`/`rightLabel` ≤80, stat `num` ≤16, stat `label` ≤40, `command` ≤80, persona `name` ≤80. Counts are capped at 1e12.
 - Counts (`total`, `count`, `days`) are raw integers, no commas. Bar `value` and stat `num` are display strings ("10.3B", "3,505"). `width` is an integer 1–100, widest bar = 100.
 - 1–5 bars per chart; `hourData` is exactly the 24-int `history.hourHistogram`; `hotHours` are ints 0–23; 1–4 outro stats.
 - Any slide you skipped in the HTML is `null` here — never invent data. No extra keys; the upload is rejected otherwise.
+- **The share page is read by strangers, not the owner — never address the owner as "you"/"your".** Rewrite every string in third person using the owner's name or "they"/"their", keeping the narrator voice: "We need to talk about your 2 AM habit" becomes "We need to talk about their 2 AM habit"; "You wiped my memory 1,145 times" becomes "Stuart wiped my memory 1,145 times". The share site's fixed headings already say "{{userName}}'s top model" etc. Don't just copy the HTML deck's strings — those are written to the owner.
 - Bars are **data, not HTML** — the share site builds its own markup.
 - Tell the user to upload the file at the Claude Unwrapped share site to get their link, and that shares expire after 90 days.
 
