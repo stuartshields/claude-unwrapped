@@ -128,3 +128,7 @@ Everything is local: the analyzer reads your `~/.claude` directory, the output i
 
 - `python3` on PATH (stdlib only)
 - Claude Code (the CLI) with plugin support — Claude Desktop and claude.ai aren't supported; their data lives server-side, not in `~/.claude`
+
+## Why "Unwrapped"?
+
+Partly because claudewrapped.com got there first. Mostly because the Claude crab has claws, and claws are hopeless at wrapping but excellent at prying things open.
