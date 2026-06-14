@@ -17,7 +17,7 @@ The copy is written fresh each time, in Claude's voice, from *your* numbers — 
 **Option 1 — skills directory (persistent, simplest).** Clone or symlink the repo into your skills directory and it auto-loads on next launch — no install command at all:
 
 ```bash
-git clone <repo-url> ~/.claude/skills/unwrapped
+git clone https://github.com/stuartshields/claude-unwrapped.git ~/.claude/skills/unwrapped
 # or, from a clone elsewhere:
 ln -s /path/to/claude-unwrapped ~/.claude/skills/unwrapped
 ```
@@ -33,7 +33,7 @@ claude --plugin-dir /path/to/claude-unwrapped
 **Option 3 — marketplace (classic).** The repo doubles as its own single-plugin marketplace:
 
 ```
-/plugin marketplace add /path/to/claude-unwrapped   # or <owner>/claude-unwrapped from GitHub
+/plugin marketplace add stuartshields/claude-unwrapped   # from GitHub, or /path/to/claude-unwrapped for a local clone
 /plugin install unwrapped@claude-unwrapped
 ```
 
@@ -76,13 +76,31 @@ python3 skills/generate/scripts/analyze.py --since 2026-06-01   # June 1 → tod
 
 ## Share it
 
-Want a link instead of a file? Ask for a shareable version:
+Want a link instead of a file? Ask for a shareable version and, alongside the HTML, you'll get `claude-unwrapped.share.json` — just the slide stats and copy, as data. Upload it at the [Claude Unwrapped share site](https://claudeunwrapped.live/) (a Cloudflare Worker; guarded by Turnstile) for a link that works for 90 days. Only what's in the share file is published.
 
 ```
-/unwrapped:generate share
+/unwrapped:generate share                               # link-only (unlisted) — the default
+/unwrapped:generate share publicly                      # also opt into the public listing
+/unwrapped:generate share without the projects slide    # drop a whole slide from the share
+/unwrapped:generate share but hide my-side-project      # hide one item; the rest is rewritten around it
+/unwrapped:generate this month, share                   # any period, shared
 ```
 
-Alongside the HTML you'll get `claude-unwrapped.share.json` — just the slide stats and copy, as data. Upload it at the Claude Unwrapped share site (a Cloudflare Worker; guarded by Turnstile) and you'll get a private-by-obscurity link that works for 90 days. Only what's in the share file is published.
+Before writing the file, Claude shows you exactly what would go public and asks what to hold back — nothing is shared by surprise. Shares are **unlisted (link-only) by default**; add "publicly" to opt into the public listing. (The public gallery isn't live yet — "publicly" just records the choice for when it lands; every share is link-only in the meantime.)
+
+<!-- MAINTAINER NOTE: the share URL above is the live domain (claudeunwrapped.live). It's hardcoded here AND in skills/generate/SKILL.md (Step 5 upload line); update both together if it ever changes. -->
+
+
+## Update a single slide
+
+Like most of your deck but want one slide redone? Because every full run is written fresh, re-generating gives you an entirely new deck — so instead, ask to update just the one slide in place. Needs an existing `claude-unwrapped.html` in the current directory; everything else stays exactly as it was (and if a share file exists, its matching section is updated too).
+
+```
+/unwrapped:generate redo my persona slide          # fresh take on one slide
+/unwrapped:generate make the head-to-head funnier   # fresh take, steered
+/unwrapped:generate change my persona name to 'The 2 AM Refactorer'   # directed edit
+/unwrapped:generate fix the typo in the streak footnote               # directed edit
+```
 
 ## Privacy
 

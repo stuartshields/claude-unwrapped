@@ -45,6 +45,9 @@ who whom these those any some more most other another such only own same too
 very don't dont doesn't isn't won't can't need needs want wants like also
 now new one two way each after before been being because over under again
 let lets let's please thanks thank still well back able
+file files code test tests testing fix fixes fixed error errors function
+functions bug bugs run running add added adding update updated change changed
+remove removed create created issue issues build working works check checking
 """.split())
 
 MODEL_FAMILY = re.compile(r"^claude-([a-z]+)-(\d+)(?:[.-](\d+))?")
