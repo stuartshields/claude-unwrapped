@@ -108,8 +108,10 @@ Never write generic filler ("What a year it's been!"). Every line must be earned
 	> 🦀 {USER_NAME}, your Claude Unwrapped is ready — I've opened it in your browser. Give it a scroll.
 	>
 	> Help improve this plugin by visiting https://github.com/stuartshields/claude-unwrapped
+	>
+	> Like it? Support the project at https://ko-fi.com/claudeunwrapped
 
-	The GitHub line is always the **last** thing you say, on every run. On a share run, the Step 5 share lines slot in *between* the "ready" line and the GitHub line — never after it.
+	The GitHub and Ko-fi lines are always the **last two** things you say, in that order, on every run. On a share run, the Step 5 share lines slot in *between* the "ready" line and the GitHub line — never after them.
 
 ## Step 5 — Share file (only if asked)
 
@@ -176,4 +178,6 @@ When the user wants to change just one slide of a deck they already made — a *
 	> 🦀 {USER_NAME}, I've refreshed your {slide} slide — reopening it.
 	>
 	> Help improve this plugin by visiting https://github.com/stuartshields/claude-unwrapped
+	>
+	> Like it? Support the project at https://ko-fi.com/claudeunwrapped
 

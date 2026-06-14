@@ -1,12 +1,30 @@
 # Claude Unwrapped 🦀
 
+[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-support%20the%20project-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/claudeunwrapped)
+
 Your Claude Code usage, Spotify-Wrapped style — a single scroll-snap HTML page narrated by Claude itself, starring the crab. Built entirely from the data already sitting in your `~/.claude` directory. Nothing leaves your machine.
 
 This works with **Claude Code (the CLI)** only — it's the one Claude that stores its usage data locally in `~/.claude`. Claude Desktop and claude.ai keep conversations in the cloud, so there's nothing on disk to unwrap.
 
+A finished deck, three of its slides:
+
+<!-- Add the images: commit them to .github/screenshots/ with these names, OR replace each src below with the URL GitHub gives you when you drag an image into the README editor on github.com. -->
+<table>
+<tr>
+<td width="33%"><img src=".github/screenshots/cover.png" alt="The cover slide: the pixel crab above the typed 'Unwrapped' headline"></td>
+<td width="33%"><img src=".github/screenshots/headline.png" alt="The headline-stat slide: a giant token count animating up from zero"></td>
+<td width="33%"><img src=".github/screenshots/persona.png" alt="The coding-personality slide: an invented persona name over an hour-of-day histogram"></td>
+</tr>
+<tr>
+<td align="center"><em>The cover</em></td>
+<td align="center"><em>The headline number</em></td>
+<td align="center"><em>Your coding personality</em></td>
+</tr>
+</table>
+
 ## What you get
 
-Eleven full-screen slides in the Anthropic palette: an opening headline stat picked to alarm you — usually your token total, counted up before your eyes — sessions, your top model on heavy rotation, top projects, a coding personality invented just for you from your hours, habits, and vocabulary, your longest streak, your most played slash command, the supporting cast you delegate to (subagents, skills, and the plugins you installed but never use), a head-to-head fun fact invented from your data (maybe "please" vs "thanks", maybe your two favourite words in a photo finish), and an outro that knows exactly what time you'll be back tomorrow.
+Eleven full-screen slides in the Anthropic palette: an opening headline stat picked to alarm you — usually your token total, counted up before your eyes — your top model on heavy rotation, top projects, a coding personality invented just for you from your hours, habits, and vocabulary, the words you reach for most, your longest streak, your most played slash command, the supporting cast you delegate to (subagents, skills, and the plugins you installed but never use), a head-to-head fun fact invented from your data (maybe "please" vs "thanks", maybe your two favourite words in a photo finish), and an outro that knows exactly what time you'll be back tomorrow.
 
 The copy is written fresh each time, in Claude's voice, from *your* numbers — not a fill-in-the-blanks mad lib.
 
@@ -86,7 +104,7 @@ Want a link instead of a file? Ask for a shareable version and, alongside the HT
 /unwrapped:generate this month, share                   # any period, shared
 ```
 
-Before writing the file, Claude shows you exactly what would go public and asks what to hold back — nothing is shared by surprise. Shares are **unlisted (link-only) by default**; add "publicly" to opt into the public listing. (The public gallery isn't live yet — "publicly" just records the choice for when it lands; every share is link-only in the meantime.)
+Before writing the file, Claude shows you exactly what would go public and asks what to hold back — nothing is shared by surprise. Shares are **unlisted (link-only) by default**; add "publicly" to opt into the public listing. A public deck also appears on the share site's homepage gallery, alongside others who opted in; either way, the link works for anyone you give it to.
 
 <!-- MAINTAINER NOTE: the share URL above is the live domain (claudeunwrapped.live). It's hardcoded here AND in skills/generate/SKILL.md (Step 5 upload line); update both together if it ever changes. -->
 

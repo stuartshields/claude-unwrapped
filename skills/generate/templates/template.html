@@ -242,29 +242,6 @@
 	}
 	.histo-labels span { flex: 1; text-align: center; }
 
-	.statgrid {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(140px, 220px));
-		gap: 14px;
-		margin-top: 36px;
-	}
-	.statgrid .cell {
-		background: rgba(250, 249, 245, 0.07);
-		border: 1px solid rgba(250, 249, 245, 0.14);
-		border-radius: 14px;
-		padding: 18px 16px;
-	}
-	.statgrid .cell b {
-		display: block;
-		font-family: var(--serif);
-		font-size: clamp(22px, 3.4vw, 34px);
-		font-weight: 500;
-		color: var(--coral);
-		font-variant-numeric: tabular-nums;
-		margin-bottom: 4px;
-	}
-	.statgrid .cell span { font-size: 12px; opacity: 0.7; letter-spacing: 0.04em; text-transform: uppercase; }
-
 	.vs {
 		display: flex;
 		gap: clamp(20px, 6vw, 70px);
@@ -436,7 +413,6 @@
 	}
 	@media (max-width: 560px) {
 		.bar-row { grid-template-columns: 92px 1fr 56px; font-size: 12px; }
-		.statgrid { grid-template-columns: repeat(2, 1fr); width: 100%; }
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.crab-walker.walking .crab,
@@ -577,7 +553,7 @@
 		<p class="kicker rv d1">{{USER_NAME}} · {{PERIOD_LABEL}}</p>
 		<h1 class="rv d2">{{OUTRO_VERDICT}}</h1>
 		<h2 class="rv d3">{{OUTRO_HEADLINE}}</h2>
-		<p class="footnote rv d4">Generated locally by Claude from ~/.claude usage data. Nothing left this machine. {{OUTRO_FOOTNOTE}}</p>
+		<p class="footnote rv d4">Generated locally by Claude from ~/.claude usage data. Nothing left this machine. Like it? <a href="https://ko-fi.com/claudeunwrapped" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline; text-underline-offset: 2px;">Support the project</a>. {{OUTRO_FOOTNOTE}}</p>
 	</section>
 
 </main>
