@@ -1,5 +1,6 @@
 {
 	"name": "claude-unwrapped",
+	"description": "Claude Unwrapped — a Spotify-Wrapped-style HTML recap of your Claude Code usage, generated locally and narrated by Claude itself.",
 	"owner": {
 		"name": "Stuart Shields"
 	},

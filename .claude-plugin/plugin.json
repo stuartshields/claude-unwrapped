@@ -6,6 +6,8 @@
 	"author": {
 		"name": "Stuart Shields"
 	},
+	"homepage": "https://claudeunwrapped.live",
+	"repository": "https://github.com/stuartshields/claude-unwrapped",
 	"license": "MIT",
 	"keywords": ["wrapped", "stats", "usage", "recap", "fun"]
 }
