@@ -43,10 +43,11 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		justify-content: safe center;  /* fall back to top-align when content overflows, so the top stays reachable */
 		text-align: center;
 		padding: 48px 24px 152px;
 		position: relative;
-		overflow: hidden;
+		overflow: hidden auto;          /* over-tall content (long uploads / short viewports) scrolls instead of clipping */
 	}
 	.slide.dark { background: var(--ink); color: var(--ivory); }
 	.slide.coral { background: var(--coral); color: var(--ivory); }
@@ -99,6 +100,9 @@
 	}
 	.dark .footnote { color: #8A867C; }
 	.coral .footnote { color: #F3D5C8; }
+	/* Outro: footnote flows under the centred stack instead of pinning absolutely,
+	   so it never collides with the share row on short/narrow viewports. */
+	.outro .footnote { position: static; margin-top: 28px; }
 
 	/* reveal animation */
 	.rv {
@@ -237,7 +241,7 @@
 		gap: 5px;
 		width: min(680px, 90vw);
 		margin-top: 8px;
-		font-size: 10px;
+		font-size: 11px;
 		opacity: 0.55;
 	}
 	.histo-labels span { flex: 1; text-align: center; }
@@ -380,7 +384,7 @@
 		transform: translateX(-50%);
 		z-index: 25;
 		pointer-events: none;
-		font-size: 11px;
+		font-size: 12px;
 		letter-spacing: 0.18em;
 		text-transform: uppercase;
 		color: var(--coral);
@@ -413,6 +417,14 @@
 	}
 	@media (max-width: 560px) {
 		.bar-row { grid-template-columns: 92px 1fr 56px; font-size: 12px; }
+		.outro .footnote { margin-top: 18px; }
+	}
+	/* short viewports (landscape phones): shrink the tallest slide's pieces so the
+	   persona/histogram slide doesn't clip under .slide's height:100dvh + overflow:hidden. */
+	@media (max-height: 520px) {
+		h1 { font-size: clamp(34px, 6.5vw, 60px); }
+		.histo { height: 110px; margin-top: 22px; }
+		.histo-labels { margin-top: 6px; }
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.crab-walker.walking .crab,
@@ -549,7 +561,7 @@
 	</section>
 
 	<!-- 11 · Outro -->
-	<section class="slide dark">
+	<section class="slide dark outro">
 		<p class="kicker rv d1">{{USER_NAME}} · {{PERIOD_LABEL}}</p>
 		<h1 class="rv d2">{{OUTRO_VERDICT}}</h1>
 		<h2 class="rv d3">{{OUTRO_HEADLINE}}</h2>
@@ -599,6 +611,10 @@
 		const max = deck.scrollWidth - deck.clientWidth;
 		const p = max > 0 ? deck.scrollLeft / max : 0;
 		fill.style.transform = `scaleX(${p})`;
+		// scroll-driven backstop: the IntersectionObserver below is unreliable for the
+		// last slide on iOS Safari (scroll-snap + non-document root), but this scroll
+		// handler always fires; celebrate() is idempotent so the IO can still win.
+		if (p > 0.999) { celebrate(); return; }
 		const span = track.clientWidth - walker.offsetWidth;
 		walker.style.transform = `translateX(${p * span}px)`;
 		walker.classList.add('walking');
