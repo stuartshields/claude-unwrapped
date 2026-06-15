@@ -2,7 +2,7 @@
 	"name": "unwrapped",
 	"displayName": "Claude Unwrapped",
 	"description": "Spotify-Wrapped-style HTML recap of your Claude Code usage, generated locally from ~/.claude and narrated by Claude itself.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"author": {
 		"name": "Stuart Shields"
 	},
