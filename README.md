@@ -28,6 +28,16 @@ Eleven full-screen slides in the Anthropic palette: an opening headline stat pic
 
 The copy is written fresh each time, in Claude's voice, from *your* numbers — not a fill-in-the-blanks mad lib.
 
+
+## But first... why "Unwrapped"?
+
+Partly because claudewrapped.com got there first. Mostly because the Claude crab has claws, and claws are hopeless at wrapping but excellent at prying things open.
+
+## Requirements
+
+- `python3` on PATH (stdlib only)
+- Claude Code (the CLI) with plugin support — Claude Desktop and claude.ai aren't supported; their data lives server-side, not in `~/.claude`
+
 ## Install
 
 **No marketplace needed.** Pick whichever suits you:
@@ -123,12 +133,3 @@ Like most of your deck but want one slide redone? Because every full run is writ
 ## Privacy
 
 Everything is local: the analyzer reads your `~/.claude` directory, the output is a static HTML file in your current directory, and no network requests are made by the script or the page.
-
-## Requirements
-
-- `python3` on PATH (stdlib only)
-- Claude Code (the CLI) with plugin support — Claude Desktop and claude.ai aren't supported; their data lives server-side, not in `~/.claude`
-
-## Why "Unwrapped"?
-
-Partly because claudewrapped.com got there first. Mostly because the Claude crab has claws, and claws are hopeless at wrapping but excellent at prying things open.
