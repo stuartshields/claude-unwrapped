@@ -43,7 +43,7 @@ Rules:
 - **The share page is read by strangers, not the owner — never address the owner as "you"/"your".** Rewrite every string in third person using the owner's name or "they"/"their", keeping the narrator voice: a second-person address (`your <thing>`) becomes third person (`their <thing>` or `{owner}'s <thing>`); a line written *to* the owner ("You did X, N times") becomes one written *about* them ("{owner} did X, N times"). The share site's fixed headings already say "{{userName}}'s top model" etc. Don't just copy the HTML deck's strings — those are written to the owner.
 - Bars are **data, not HTML** — the share site builds its own markup.
 - Once the file is written and the leak check passes, slot the share lines into the Step 4 completion message — after the "ready" line, before the GitHub line — as **fixed text, not your own prose**. Use the URL exactly, then add the one line that matches `public`:
-	> You've also generated your share file. Upload it at https://claudeunwrapped.live/ to get your link — it expires after 90 days.
+	> You've also generated your share file. Upload it at https://clawdunwrapped.live/ to get your link — it expires after 90 days.
 
 	- `public: true` → add: "And you've made it public — the rest of the world is going to see how you use Claude. Nice work."
 	- `public: false` → add: "It's unlisted, so no one but the people you share the link with (and me — Claude) will know your habits."

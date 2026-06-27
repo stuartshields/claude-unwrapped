@@ -2,11 +2,11 @@
 	"name": "unwrapped",
 	"displayName": "Claude Unwrapped",
 	"description": "Spotify-Wrapped-style HTML recap of your Claude Code usage, generated locally from ~/.claude and narrated by Claude itself.",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"author": {
 		"name": "Stuart Shields"
 	},
-	"homepage": "https://claudeunwrapped.live",
+	"homepage": "https://clawdunwrapped.live",
 	"repository": "https://github.com/stuartshields/claude-unwrapped",
 	"license": "MIT",
 	"keywords": ["wrapped", "stats", "usage", "recap", "fun"]

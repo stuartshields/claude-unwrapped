@@ -104,7 +104,9 @@ python3 skills/generate/scripts/analyze.py --since 2026-06-01   # June 1 → tod
 
 ## Share it
 
-Want a link instead of a file? Ask for a shareable version and, alongside the HTML, you'll get `claude-unwrapped.share.json` — just the slide stats and copy, as data. Upload it at the [Claude Unwrapped share site](https://claudeunwrapped.live/) (a Cloudflare Worker; guarded by Turnstile) for a link that works for 90 days. Only what's in the share file is published.
+Want a link instead of a file? Ask for a shareable version and, alongside the HTML, you'll get `claude-unwrapped.share.json` — just the slide stats and copy, as data. Upload it at the [Claude Unwrapped share site](https://clawdunwrapped.live/) (a Cloudflare Worker; guarded by Turnstile) for a link that works for 90 days. Only what's in the share file is published.
+
+> **Heads up:** the share site moved from `claudeunwrapped.live` to `clawdunwrapped.live`. Anthropic emailed us asking us to change the name, so the URL updated to match.
 
 ```
 /unwrapped:generate share                               # link-only (unlisted) — the default
@@ -116,7 +118,7 @@ Want a link instead of a file? Ask for a shareable version and, alongside the HT
 
 Before writing the file, Claude shows you exactly what would go public and asks what to hold back — nothing is shared by surprise. Shares are **unlisted (link-only) by default**; add "publicly" to opt into the public listing. A public deck also appears on the share site's homepage gallery, alongside others who opted in; either way, the link works for anyone you give it to.
 
-<!-- MAINTAINER NOTE: the share URL above is the live domain (claudeunwrapped.live). It's hardcoded here AND in skills/generate/SKILL.md (Step 5 upload line); update both together if it ever changes. -->
+<!-- MAINTAINER NOTE: the share URL above is the live domain (clawdunwrapped.live). It's hardcoded here AND in skills/generate/references/share-file.md (Step 5 upload line); update both together if it ever changes. -->
 
 
 ## Update a single slide
